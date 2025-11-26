@@ -1,0 +1,56 @@
+get:
+  summary: Get messages list
+  description: Retrieve list of all chat messages
+  operationId: listMessages
+  tags:
+    - Messages
+  x-isSecure: true
+  security:
+    - tokenAuth: []
+  parameters:
+    - name: limit
+      in: query
+      description: Number of messages to return
+      required: false
+      schema:
+        type: integer
+        default: 50
+        minimum: 1
+        maximum: 100
+    - name: offset
+      in: query
+      description: Number of messages to skip
+      required: false
+      schema:
+        type: integer
+        default: 0
+        minimum: 0
+  responses:
+    '200':
+      description: List of messages
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+                description: Total number of messages
+              next:
+                type: string
+                nullable: true
+                description: URL to next page
+              previous:
+                type: string
+                nullable: true
+                description: URL to previous page
+              results:
+                type: array
+                items:
+                  $ref: '../openapi.yml#/components/schemas/Message'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yml#/components/schemas/Error'

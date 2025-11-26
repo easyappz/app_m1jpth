@@ -1,0 +1,55 @@
+post:
+  summary: Register new user
+  description: Create a new user account with username, email and password
+  operationId: registerUser
+  tags:
+    - Authentication
+  x-isSecure: false
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - username
+            - email
+            - password
+          properties:
+            username:
+              type: string
+              minLength: 3
+              maxLength: 150
+              description: Unique username
+            email:
+              type: string
+              format: email
+              description: User email address
+            password:
+              type: string
+              format: password
+              minLength: 8
+              description: User password
+  responses:
+    '201':
+      description: User successfully registered
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+              username:
+                type: string
+              email:
+                type: string
+              token:
+                type: string
+                description: Authentication token
+    '400':
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yml#/components/schemas/ValidationError'

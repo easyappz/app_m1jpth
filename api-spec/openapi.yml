@@ -1,0 +1,89 @@
+openapi: 3.0.3
+info:
+  title: Group Chat API
+  description: API for group chat application with authentication and messaging
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Development server
+  - url: /
+    description: Current server
+
+paths:
+  /api/auth/register/:
+    $ref: './paths/auth-register.yml'
+  /api/auth/login/:
+    $ref: './paths/auth-login.yml'
+  /api/auth/logout/:
+    $ref: './paths/auth-logout.yml'
+  /api/profile/:
+    get:
+      $ref: './paths/profile-get.yml#/get'
+    put:
+      $ref: './paths/profile-update.yml#/put'
+  /api/messages/:
+    get:
+      $ref: './paths/messages-list.yml#/get'
+    post:
+      $ref: './paths/messages-create.yml#/post'
+
+components:
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token-based authentication with format: Token {token}'
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+
+    ValidationError:
+      type: object
+      properties:
+        field_name:
+          type: array
+          items:
+            type: string
+          description: List of validation errors for specific field
+
+    Member:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        author:
+          $ref: '#/components/schemas/Member'
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true

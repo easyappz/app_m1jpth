@@ -1,0 +1,50 @@
+post:
+  summary: User login
+  description: Authenticate user and return auth token
+  operationId: loginUser
+  tags:
+    - Authentication
+  x-isSecure: false
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - username
+            - password
+          properties:
+            username:
+              type: string
+              description: Username
+            password:
+              type: string
+              format: password
+              description: User password
+  responses:
+    '200':
+      description: Successfully authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: Authentication token
+              user:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  username:
+                    type: string
+                  email:
+                    type: string
+    '400':
+      description: Invalid credentials
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yml#/components/schemas/Error'

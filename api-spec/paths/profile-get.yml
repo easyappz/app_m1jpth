@@ -1,0 +1,22 @@
+get:
+  summary: Get user profile
+  description: Retrieve current authenticated user profile information
+  operationId: getProfile
+  tags:
+    - Profile
+  x-isSecure: true
+  security:
+    - tokenAuth: []
+  responses:
+    '200':
+      description: User profile data
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yml#/components/schemas/Member'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yml#/components/schemas/Error'

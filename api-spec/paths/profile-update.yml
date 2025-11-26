@@ -1,0 +1,44 @@
+put:
+  summary: Update user profile
+  description: Update current authenticated user profile information
+  operationId: updateProfile
+  tags:
+    - Profile
+  x-isSecure: true
+  security:
+    - tokenAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            username:
+              type: string
+              minLength: 3
+              maxLength: 150
+              description: New username
+            email:
+              type: string
+              format: email
+              description: New email address
+  responses:
+    '200':
+      description: Profile successfully updated
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yml#/components/schemas/Member'
+    '400':
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yml#/components/schemas/ValidationError'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yml#/components/schemas/Error'
