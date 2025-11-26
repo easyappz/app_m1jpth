@@ -1,32 +1,55 @@
 import React, { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import ErrorBoundary from './ErrorBoundary';
 import './App.css';
 
-import { Home } from './components/Home';
 import Register from './components/Register';
 import Login from './components/Login';
 import Chat from './components/Chat';
 import Profile from './components/Profile';
 
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
+  return token ? children : <Navigate to="/login" replace />;
+};
+
+const RootRedirect = () => {
+  const token = localStorage.getItem('token');
+  return <Navigate to={token ? "/chat" : "/login"} replace />;
+};
+
 function App() {
-  /** Никогда не удаляй этот код */
   useEffect(() => {
     if (typeof window !== 'undefined' && typeof window.handleRoutes === 'function') {
-      /** Нужно передавать список существующих роутов */
-      window.handleRoutes(['/', '/register', '/login', '/chat', '/profile']);
+      window.handleRoutes(['/register', '/login', '/chat', '/profile']);
     }
   }, []);
 
   return (
     <ErrorBoundary>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/profile" element={<Profile />} />
-      </Routes>
+      <div className="app-container" data-easytag="id5-src/App.jsx">
+        <Routes>
+          <Route path="/" element={<RootRedirect />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route 
+            path="/chat" 
+            element={
+              <PrivateRoute>
+                <Chat />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            } 
+          />
+        </Routes>
+      </div>
     </ErrorBoundary>
   );
 }
