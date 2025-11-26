@@ -2,46 +2,39 @@ import instance from './axios';
 
 /**
  * Get list of messages
- * @param {Object} params - Query parameters
- * @param {number} [params.limit=50] - Number of messages to return (1-100)
- * @param {number} [params.offset=0] - Number of messages to skip
- * @returns {Promise} Paginated list of messages
+ * @param {number} limit - Number of messages to return
+ * @param {number} offset - Number of messages to skip
+ * @returns {Promise} Response with messages list
  */
-export const getMessages = async (params = {}) => {
+export const getMessages = async (limit = 50, offset = 0) => {
   const token = localStorage.getItem('authToken');
-  
   const response = await instance.get('/api/messages/', {
-    params: {
-      limit: params.limit || 50,
-      offset: params.offset || 0,
-    },
     headers: {
       Authorization: `Token ${token}`,
     },
+    params: {
+      limit,
+      offset,
+    },
   });
-  
   return response.data;
 };
 
 /**
- * Send a new message
- * @param {string} content - Message content (min 1, max 5000 characters)
- * @returns {Promise} Created message data
+ * Create new message
+ * @param {string} content - Message text content
+ * @returns {Promise} Response with created message
  */
-export const sendMessage = async (content) => {
+export const createMessage = async (content) => {
   const token = localStorage.getItem('authToken');
-  
   const response = await instance.post(
     '/api/messages/',
-    {
-      content,
-    },
+    { content },
     {
       headers: {
         Authorization: `Token ${token}`,
       },
     }
   );
-  
   return response.data;
 };
