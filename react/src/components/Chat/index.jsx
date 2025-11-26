@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getMessages, createMessage } from '../../api/messages';
+import { logout } from '../../api/auth';
 import './Chat.css';
 
 const Chat = () => {
@@ -23,6 +24,7 @@ const Chat = () => {
       setError(null);
     } catch (err) {
       if (err.response?.status === 401) {
+        localStorage.removeItem('authToken');
         navigate('/login');
       } else {
         setError('Ошибка при загрузке сообщений');
@@ -64,6 +66,7 @@ const Chat = () => {
       setError(null);
     } catch (err) {
       if (err.response?.status === 401) {
+        localStorage.removeItem('authToken');
         navigate('/login');
       } else {
         setError('Ошибка при отправке сообщения');
@@ -73,9 +76,15 @@ const Chat = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      localStorage.removeItem('authToken');
+      navigate('/login');
+    }
   };
 
   const formatDate = (dateString) => {

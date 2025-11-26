@@ -9,12 +9,12 @@ import Chat from './components/Chat';
 import Profile from './components/Profile';
 
 const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('authToken');
   return token ? children : <Navigate to="/login" replace />;
 };
 
 const RootRedirect = () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('authToken');
   return <Navigate to={token ? "/chat" : "/login"} replace />;
 };
 

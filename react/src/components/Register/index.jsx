@@ -21,8 +21,8 @@ function Register() {
       newErrors.username = 'Имя пользователя должно содержать минимум 3 символа';
     }
 
-    if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Введите корректный email';
+    if (!formData.email) {
+      newErrors.email = 'Введите email';
     }
 
     if (!formData.password || formData.password.length < 8) {
@@ -68,9 +68,10 @@ function Register() {
 
       if (response.token) {
         localStorage.setItem('authToken', response.token);
+        navigate('/chat');
+      } else {
+        navigate('/login');
       }
-
-      navigate('/login');
     } catch (error) {
       if (error.response && error.response.data) {
         const serverErrors = {};

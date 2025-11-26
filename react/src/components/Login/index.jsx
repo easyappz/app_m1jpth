@@ -59,7 +59,7 @@ function Login() {
         localStorage.setItem('authToken', response.token);
       }
 
-      navigate('/');
+      navigate('/chat');
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setErrors({ general: 'Неверное имя пользователя или пароль' });
